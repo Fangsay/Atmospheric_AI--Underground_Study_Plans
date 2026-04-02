@@ -1,6 +1,6 @@
 # Atmospheric_Learning_Projects
 
-*index*
+##index
  -grade 1 second term
  -grade 2 first term
  -grade 2 second term
