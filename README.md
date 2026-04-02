@@ -1,10 +1,11 @@
-# A trial
+# 学习项目存储--气象与AI复合领域
 
-## index
- - grade 1 second term
- - grade 2 first term
- - grade 2 second term
- - grade 3 first term
- - grade 3 second term
- - grade 4 first term
- - grade 4 second term
+### 目录
+ - 大一下
+    -气象数据处理与可视化
+ - 大二上
+ - 大二下
+ - 大三上
+ - 大三下
+ - 大四上
+ - 大四下
