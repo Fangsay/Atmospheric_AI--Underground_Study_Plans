@@ -18,6 +18,15 @@ def data_process(file_path : str,season : str = None):
     clim.attrs['source_id'] = ds.attrs['source_id']
     return clim
 
+def data_mask(data : xr.DataArray,mask_data : xr.DataArray,area : str = 'land' ):
+    var = mask_data.attrs['variable_id']
+    if area == 'land':
+        mask_data = mask_data[var]>=50
+    elif area == 'ocean':
+        mask_data = mask_data[var]<50
+    masked_data = data.where(mask_data,np.nan)
+    return masked_data
+
 def plot_func(data,ax : plt.Axes):
     ch = data.plot.contourf(
         ax=ax,
@@ -30,12 +39,12 @@ def plot_func(data,ax : plt.Axes):
     ax.coastlines()
     return ch
 
-def data_visual(*data):
+def data_visual(*data,title = None):
     n = len(data)
     cols = int(np.ceil(np.sqrt(n)))
     rows = int(np.ceil(n/cols))
-    fig = plt.figure(1,[14,6])
-    fig.suptitle('Precipitation Climatology (JJA)',fontweight='bold',fontsize=15)
+    fig = plt.figure(1,[16,8])
+    fig.suptitle(title,fontweight='bold',fontsize=15)
     axes = []
     chs = []
     for i in range(1,n+1):
@@ -49,20 +58,25 @@ def data_visual(*data):
         chs[0],
         ax=axes,
         orientation='horizontal',
-        shrink=0.6,
-        pad=0.1,
+        shrink=0.8,
+        pad=0.05,
+        aspect=50,
         extend='max',
         location='bottom'
     )
-    cbar.set_label('mm/day',labelpad=10,fontsize=10,loc='right')
+    cbar.set_label('mm/day',labelpad=10,fontsize=20,loc='right')
     plt.show()
 
 def main():
-    path1 = 'data/pr_Amon_ACCESS-ESM1-5_historical_r1i1p1f1_gn_201001-201412.nc'
-    path2 = 'data/pr_Amon_ACCESS-CM2_historical_r1i1p1f1_gn_201001-201412.nc'
-    data1 = data_process(path1,season='JJA')
-    data2 = data_process(path2,season='JJA')
-    data_visual(data1,data2)
+    path1 = 'data/pr_Amon_ACCESS-CM2_historical_r1i1p1f1_gn_201001-201412.nc'
+    path2 = 'data/sftlf_fx_ACCESS-CM2_historical_r1i1p1f1_gn.nc'
+    mask = xr.open_dataset(path2)
+    data1 = data_process(path1, season='JJA')
+    data2 = data_process(path1)
+    data3 = data_mask(data1,mask)
+    data4 = data_mask(data2,mask,area='ocean')
+    data_visual(data1,data2,data3,data4,title='Precipitation Climatology (JJA)')
+
 
 if __name__ == '__main__':
     main()
